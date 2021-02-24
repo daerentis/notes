@@ -10,8 +10,7 @@
   <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="theme-color" content="#ffffff">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 </head>
 
@@ -21,9 +20,12 @@
       <quill-editor id="editor" ref="myTextEditor" @ready="onEditorReady($event)" @change="onEditorChange($event)" :options="editorOption"></quill-editor>
     </div>
     <div class="sidebar">
+      <div class="search-container">
+        <input type="text" placeholder="Search ..." />
+      </div>
       <ul>
-        <li v-bind:class="{ active: (today == active) }">today</li>
-        <li v-for="item in sidebar" v-bind:class="{ active: (item[0] == active) }" v-on:click="selectNote">{{ item[0] }}</li>
+        <li v-bind:class="{ active: (today == active) }" v-on:click="selectNote(today)">today</li>
+        <li v-for="item in sidebar" v-bind:class="{ active: (item[0] == active) }" v-show="item[0] != today" v-on:click="selectNote(item[0])">{{ item[0] }}</li>
       </ul>
     </div>
   </div>

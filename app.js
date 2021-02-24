@@ -36,7 +36,6 @@ new Vue({
           [{ 'header': 1 }, { 'header': 2 }],               // custom button values
           [{ 'list': 'ordered'}, { 'list': 'bullet' }],
           [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
-          [{ 'align': [] }],
           ['clean'] 
           ['image', 'video'],
         ]         
@@ -50,27 +49,8 @@ new Vue({
     get(today, db).then((note) => this.content = note);
     this.loadEntries((notes) => this.sidebar = notes.reverse());
   },
-    
-  /*
-  watch: {
-    content(newContent) {
-      set(this.active, newContent, db);
-      entries(db).then((val) => this.sidebar = val.reverse());
-    }
-  },
-  */
   
   methods: {
-    loadEntries(callback) {
-      console.log('loadEntrie()');
-      entries(db).then(callback);
-    },
-    
-    selectNote(event) {
-      get(event.srcElement.innerHTML, db).then((val) => this.$refs.myTextEditor.quill.setContents(val));
-      this.active = event.srcElement.innerHTML;
-    },
-     
     onEditorReady(quill) {
       get(today, db).then((val) => quill.setContents(val));
       quill.focus();
@@ -78,6 +58,15 @@ new Vue({
     
     onEditorChange({ quill, html, text }) {
       set(this.active, quill.editor.delta, db);
+    },
+    
+    loadEntries(callback) {
+      entries(db).then(callback);
+    },
+    
+    selectNote(note) {
+      get(note, db).then((val) => this.$refs.myTextEditor.quill.setContents(val));
+      this.active = note;
     }
   }
 })
