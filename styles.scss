@@ -1,4 +1,5 @@
 $font-family: 'Ubuntu Mono', monospace;
+$primary: #444;
 
 * {
   box-sizing: border-box;
@@ -8,10 +9,25 @@ $font-family: 'Ubuntu Mono', monospace;
   display: none !important;
 }
 
+::-webkit-scrollbar {
+  color: white;
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: $primary;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
 body {
   color: white;
   margin: 0;
-  background: #444;
+  background: $primary;
   font-family: $font-family;
   font-size: 13px;
 }
@@ -23,11 +39,11 @@ body {
 
 .main {
   padding: 15px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .sidebar {
-  overflow: scroll;
+  overflow: auto;
   background: #444;
   padding: 15px;
   border-left: 1px dashed #ccc;
@@ -56,6 +72,10 @@ body {
       padding: 10px;
       cursor: pointer;
       border: 1px solid transparent;
+      position: relative;
+      display: grid;
+      grid-template-columns: auto auto;
+      justify-content: space-between;
       
       &.active {
         background: #fc9e2c;
@@ -64,7 +84,26 @@ body {
       
       &:hover {
         border: 1px solid white;
-        /* background: #ff8c00; */
+        
+        .remove-note {
+          display: block;
+        }
+      }
+      
+      .remove-note {
+        display: none;
+        color: white;
+        width: 30px;
+        text-align: center;
+        
+        &:before {
+          content: "\2715";
+          font-size: 10px;
+        }
+        
+        &:hover {
+          color: red;
+        }
       }
     }
   }
@@ -77,7 +116,7 @@ body {
   padding: 0;
   outline: none;
   resize: none;
-  background: #444;
+  background: $primary;
   color: white;
 }
 

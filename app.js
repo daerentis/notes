@@ -1,7 +1,8 @@
 import "./node_modules/quill/dist/quill.bubble.css"
 import './styles.scss'
 
-import { createStore, entries, get, set } from 'idb-keyval'
+import Vue from './node_modules/vue/dist/vue.min'
+import { createStore, entries, get, set, del } from 'idb-keyval'
 import moment from 'moment';
 import 'moment/locale/de';
 import Quill from 'quill';
@@ -45,9 +46,10 @@ new Vue({
     today: today,
     active: today
   },
+  
   mounted() {
     get(today, db).then((note) => this.content = note);
-    this.loadEntries((notes) => this.sidebar = notes.reverse());
+    this.reloadNotes();
   },
   
   methods: {
@@ -60,13 +62,24 @@ new Vue({
       set(this.active, quill.editor.delta, db);
     },
     
-    loadEntries(callback) {
-      entries(db).then(callback);
+    reloadNotes(callback) {
+      entries(db).then((notes) => this.sidebar = notes.reverse());
     },
     
     selectNote(note) {
-      get(note, db).then((val) => this.$refs.myTextEditor.quill.setContents(val));
+      get(note, db).then((val) => this.$refs.quillEditor.quill.setContents(val));
       this.active = note;
+    },
+    
+    removeNote(note) {
+      if (confirm("Are you sure you want to delete this note?") == true) {
+        del(note, db).then(() => {
+          this.reloadNotes()
+          
+          if (note == this.active)
+            this.active = today
+        });
+      }
     }
   }
 })
