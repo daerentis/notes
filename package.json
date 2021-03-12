@@ -13,7 +13,9 @@
     "sass": "^1.32.8"
   },
   "dependencies": {
+    "dexie": "^3.0.3",
     "idb-keyval": "^5.0.2",
+    "lunr": "^2.3.9",
     "moment": "^2.29.1",
     "vue": "^2.6.12",
     "vue-quill-editor": "^3.0.6"

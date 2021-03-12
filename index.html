@@ -19,11 +19,14 @@
       <quill-editor id="editor" ref="quillEditor" @ready="onEditorReady($event)" @change="onEditorChange($event)" :options="editorOption"></quill-editor>
     </div>
     <div class="sidebar">
+      <div class="search-container">
+        <input type="text" v-model="query" v-on:keyup="searchNote" placeholder="Search..." />
+      </div>
       <ul>
         <li v-bind:class="{ active: (today == active) }" v-on:click="selectNote(today)">Today</li>
-        <li v-for="item in sidebar" v-bind:class="{ active: (item[0] == active) }" v-show="item[0] != today" v-on:click="selectNote(item[0])">
-          <div>{{ item[0] }}</div>
-          <div class="remove-note" v-on:click.stop="removeNote(item[0])"></div>
+        <li v-for="item in sidebar" v-bind:class="{ active: (item.date == active), marked: marked[item.id] }" v-show="item.date != today" v-on:click="selectNote(item.date)">
+          <div>{{ item.date }}</div>
+          <div class="remove-note" v-on:click.stop="removeNote(item)"></div>
         </li>
       </ul>
     </div>
