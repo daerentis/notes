@@ -4,7 +4,7 @@
   "description": "Just a very simple browser-based text editor with auto-save capabilities for daily use",
   "scripts": {
     "watch": "parcel watch index.html",
-    "build": "parcel build index.html --no-source-maps"
+    "prod": "parcel build index.html --no-source-maps"
   },
   "author": "Christian Strausbach - www.freshlime.de",
   "license": "ISC",

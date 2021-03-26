@@ -40,13 +40,12 @@ new Vue({
           ['blockquote', 'code-block'],        
           [{ 'header': 1 }, { 'header': 2 }],
           [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-          [{ 'indent': '-1'}, { 'indent': '+1' }],
-          ['clean'],
-          ['image', 'video'],
+          [{ 'indent': '-1'}, { 'indent': '+1' }]
         ]         
       }
     },
     sidebar: [],
+    index: [],
     marked: [],
     today: today,
     active: today
@@ -77,7 +76,7 @@ new Vue({
     
     reloadNotes() {
       this.sidebar = [];
-      db.notes.each((note) => {
+      db.notes.orderBy('date').reverse().each((note) => {
         this.sidebar.push(note);
       })
     },
@@ -94,35 +93,39 @@ new Vue({
       this.active = date;
     },
     
+    createIndex() {
+      var notes = [];
+      
+      db.notes.each((note)  => {
+        note.content = JSON.stringify(note.content).replace(/\{|\}|\[|\]|:|"|,|(\\n)|ops/gm, ' ');
+        notes.push(note);
+      }).then(() => {
+        this.index = lunr(function () {
+          this.field('date')
+          this.field('content')
+  
+          notes.forEach(function (note) {
+            this.add(note)
+          }, this);
+        })
+      })
+    },
+    
     searchNote() {
       var query = this.query;
-      var notes = [];
       var sidebar = this.sidebar;
       
       if (query) {
-        db.notes.each((note)  => {
-          note.content = JSON.stringify(note.content).replace(/\{|\}|\[|\]|:|"|,|(\\n)|ops/gm, ' ');
-          notes.push(note);
-        }).then(() => {
-          var idx = lunr(function () {
-            this.field('date')
-            this.field('content')
-            
-            notes.forEach(function (note) {
-              this.add(note)
-            }, this);
-          })
-          return idx.search(query);
-        }).then((results) => {
-          if (results) {
-            this.marked = [];
-            this.sidebar.forEach((element) => {
-              results.forEach((result) => {
-                this.marked[element.id] = (element.id == result.ref)
-              })
-            })  
-          }
-        })
+        var results = this.index.search(query);
+        
+        if (results) {
+          this.marked = [];
+          this.sidebar.forEach((element) => {
+            results.forEach((result) => {
+              this.marked[element.id] = (element.id == result.ref)
+            })
+          })  
+        }
      }
     },
     

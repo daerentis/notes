@@ -20,7 +20,7 @@
     </div>
     <div class="sidebar">
       <div class="search-container">
-        <input type="text" v-model="query" v-on:keyup="searchNote" placeholder="Search..." />
+        <input type="text" v-model="query" v-on:focus="createIndex" v-on:keyup="searchNote" placeholder="Search..." />
       </div>
       <ul>
         <li v-bind:class="{ active: (today == active) }" v-on:click="selectNote(today)">Today</li>
